@@ -97,6 +97,7 @@ Pain points like additional smartphone, no possibility of charging the marker, n
 * [bluettoth protocol](https://www.reddit.com/r/recoilhacks/comments/7o6kf1/understanding_bluetooth_communication_between/)
 * [recoil hub wlan booster](https://www.reddit.com/r/recoilhacks/comments/8seks2/recoil_wifi_hub_mod_add_a_signal_booster/)
 * [recoil hub get into it](https://www.reddit.com/r/RECOILWorld/comments/6wjw8z/recoil_reverse_engineering/)
+* [Some general information](https://wiki.lazerswarm.com/wiki/Category:Recoil)
 
 ### Body and 3D print links
 
