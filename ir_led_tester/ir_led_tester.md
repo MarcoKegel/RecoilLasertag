@@ -8,11 +8,17 @@
 
 ![alt text](image.png)
 
-### Circuit - 2
-[]()
-- replace transistor with fet to provide more current and react faster
-- add cap to increase led feedback time
-- adapt sensor resistor to improve sensor sensitivity
-
 
 ### Circuit - 3 - VS1838B
+
+
+## Journal
+
+### 15.01.2025
+
+- test against real marker showed, no improvement needed. Circuit 1 works fine.
+- 3d test prints ongoing
+  - add holes for mounting
+  - add space for the pcb
+  - add holes to save filament
+  - 
