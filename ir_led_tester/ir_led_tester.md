@@ -1,5 +1,6 @@
 
 
+## Electronic
 
 ### Circuit - 1
 - IR Sensor Resistor 100R
@@ -11,6 +12,11 @@
 
 ### Circuit - 3 - VS1838B
 
+## Software
+
+### Brainstorming
+- [Github Arduino-IRremote](https://github.com/Arduino-IRremote/Arduino-IRremote) Remote for TV and so on
+- For Prototyping a small Arduino with only receiving the ir signal by VS1838B and forward to serial should sufficient
 
 ## Journal
 
