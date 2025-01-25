@@ -37,6 +37,21 @@ Attributes: Read
 GUID: **e6f59d12**-8230-4a5c-b22f-c062b1d329e3 
 Attributes: Read-Notify
 
+| Name                 | Data Type    | Description                                                                                               | summed bytes |
+| -------------------- | ------------ | --------------------------------------------------------------------------------------------------------- | ------------ |
+| Pkt Cnt              | U4           | The counter of this packet.                                                                               | 0            |
+| Cmd Cnt              | U4           | Latest command counter received from the app.                                                             | 1            |
+| GunID                | U8           | The identifier for this gun. 0x01…0x10 is valid, 0 is invalid.                                            | 2            |
+| Buttons              | U8           | Digital buttons from controller; one bit per button.                                                      | 3            |
+| Pressed              | U4*6         | Number of times that buttons have been pressed (mod 16):                                                  | 6            |
+| Voltage              | S16          | Battery voltage (in mV) This is formally a signed number, but of course a negative value is not expected. | 8            |
+| IrEvents             | Struct {} *2 |                                                                                                           | 9            |
+| WeaponAmmo           | U8           | Amount of ammo remaining for firing independently.                                                        | 10           |
+| GunFlags             | U8           | Bit map                                                                                                   | 11           |
+| Selected Weapon Type | U8           | Currently selected Weapon Type                                                                            | 12           |
+| Reserved             | U8*3         | Reserved for future expansion                                                                             | 15           |
+
+
 ### Characteristic ”Control”
 GUID: **e6f59d13**-8230-4a5c-b22f-c062b1d329e3 
 Attributes: Read-Write

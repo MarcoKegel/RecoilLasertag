@@ -3,7 +3,7 @@
 
 try
 {
-    new BT().Run().Wait();
+    new ParsingExample().LogTelemetry().Wait();
 }
 catch (System.Exception e)
 {
