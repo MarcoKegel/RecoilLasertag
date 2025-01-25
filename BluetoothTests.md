@@ -2,8 +2,48 @@
 
 Target is to understand the bluetooth protocol between the weapon and the smartphone
 
-Protocol see
-https://wiki.lazerswarm.com/wiki/Recoil:Bluetooth_Protocol_Details
+
+[Protocol see](https://wiki.lazerswarm.com/wiki/Recoil:Bluetooth_Protocol_Details)
+[example implementation in javascript](https://github.com/DroopCat/Scope/blob/main/static/assets/lib/recoilweapon.js)
+[gat dotnet lib](https://github.com/hashtagchris/DotNet-BlueZ)
+
+# api
+
+## Service “Generic Access”
+GUID: 1800 
+This is the standard GATT service that needs to be implemented.
+
+### Characteristic “Device Name”. 
+GUID: 2A00 
+Attributes: Read-Write 
+- The device name is an ASCII string concatenating the “SRG1_” prefix with the 16 characters representing the hex UUID of the device (the same UUID is also available in the ID characteristic of the Recoil service). E.g. SRG1_BF7EB8569758B65F
+
+## Service “Device Information”
+GUID: 180A
+This is a standard GATT service. Apple devices running test programs such as “LightBlue” prefer to have this implemented, and the implementation is supplied with most BLE demos.
+
+### Characteristic “Manufacturer name String”. 
+GUID: 2A29 
+Attributes: Read
+
+## Service ”RecoilGun”
+GUID: e6f59d10-8230-4a5c-b22f-c062b1d329e3
+
+### Characteristic ”gun identity”
+GUID: **e6f59d11**-8230-4a5c-b22f-c062b1d329e3 
+Attributes: Read
+
+### Characteristic ”Telemetry”
+GUID: **e6f59d12**-8230-4a5c-b22f-c062b1d329e3 
+Attributes: Read-Notify
+
+### Characteristic ”Control”
+GUID: **e6f59d13**-8230-4a5c-b22f-c062b1d329e3 
+Attributes: Read-Write
+
+### Characteristic ”Config”
+GUID: **e6f59d14**-8230-4a5c-b22f-c062b1d329e3
+Attributes: Write
 
 ## Prototyping
 
