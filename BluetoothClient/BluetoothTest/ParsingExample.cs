@@ -1,3 +1,4 @@
+
 using HashtagChris.DotNetBlueZ;
 using HashtagChris.DotNetBlueZ.Extensions;
 public class ParsingExample
@@ -45,9 +46,11 @@ public class ParsingExample
     {
         try
         {
-            Console.WriteLine($"Characteristic value (hex): {BitConverter.ToString(eventArgs.Value)}");
+            Console.WriteLine($"{BitConverter.ToString(eventArgs.Value)}");
             var payload = TelemetryPayload.FromByteArray(eventArgs.Value);
-            Console.WriteLine(payload.Buttons);
+            
+            Console.WriteLine($"GunId {ToBinary(payload.GunID)}");
+            Console.WriteLine($"Button {ToBinary(payload.Buttons)}");
 
         }
         catch (Exception ex)
@@ -56,7 +59,10 @@ public class ParsingExample
         }
     }
 
+    private string ToBinary(byte number) => Convert.ToString(number, 2).PadLeft(8, '0');
     private static TimeSpan timeout = TimeSpan.FromSeconds(15);
 
 
 }
+
+

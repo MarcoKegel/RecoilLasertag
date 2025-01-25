@@ -24,8 +24,7 @@ record TelemetryPayload
         using (var reader = new BinaryReader(new MemoryStream(data)))
         {
             byte firstByte = reader.ReadByte();
-            byte secondByte = reader.ReadByte();
-            
+                        
             // Extract 4-bit values
             byte packetCount = (byte)(firstByte >> 4); // Upper 4 bits
             byte commandCount = (byte)(firstByte & 0x0F); // Lower 4 bits
