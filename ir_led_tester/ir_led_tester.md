@@ -16,6 +16,7 @@
 
 ### Brainstorming
 - [Github Arduino-IRremote](https://github.com/Arduino-IRremote/Arduino-IRremote) Remote for TV and so on
+- [low level github project](https://github.com/cyborg5/IRLib2)
 - For Prototyping a small Arduino with only receiving the ir signal by VS1838B and forward to serial should sufficient
 
 ## Journal
