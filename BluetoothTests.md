@@ -11,19 +11,21 @@ Target is to understand the bluetooth protocol between the weapon and the smartp
 
 ## Service “Generic Access”
 GUID: 1800 
-This is the standard GATT service that needs to be implemented.
+- This is the standard GATT service that needs to be implemented.
 
 ### Characteristic “Device Name”. 
 GUID: 2A00 
+
 Attributes: Read-Write 
 - The device name is an ASCII string concatenating the “SRG1_” prefix with the 16 characters representing the hex UUID of the device (the same UUID is also available in the ID characteristic of the Recoil service). E.g. SRG1_BF7EB8569758B65F
 
 ## Service “Device Information”
 GUID: 180A
-This is a standard GATT service. Apple devices running test programs such as “LightBlue” prefer to have this implemented, and the implementation is supplied with most BLE demos.
+- This is a standard GATT service. Apple devices running test programs such as “LightBlue” prefer to have this implemented, and the implementation is supplied with most BLE demos.
 
 ### Characteristic “Manufacturer name String”. 
 GUID: 2A29 
+
 Attributes: Read
 
 ## Service ”RecoilGun”
@@ -31,10 +33,12 @@ GUID: e6f59d10-8230-4a5c-b22f-c062b1d329e3
 
 ### Characteristic ”gun identity”
 GUID: **e6f59d11**-8230-4a5c-b22f-c062b1d329e3 
+
 Attributes: Read
 
 ### Characteristic ”Telemetry”
 GUID: **e6f59d12**-8230-4a5c-b22f-c062b1d329e3 
+
 Attributes: Read-Notify
 
 | Name                 | Data Type    | Description                                                                                               | summed bytes |
@@ -44,20 +48,43 @@ Attributes: Read-Notify
 | GunID                | U8           | The identifier for this gun. 0x01…0x10 is valid, 0 is invalid.                                            | 2            |
 | Buttons              | U8           | Digital buttons from controller; one bit per button.                                                      | 3            |
 | Pressed              | U4*6         | Number of times that buttons have been pressed (mod 16):                                                  | 6            |
-| Voltage              | S16          | Battery voltage (in mV) This is formally a signed number, but of course a negative value is not expected. | 8            |
+| Voltage              | S16          | Battery voltage (in mV) This is formally a signed number | 8            |
 | IrEvents             | Struct {} *2 |                                                                                                           | 9            |
 | WeaponAmmo           | U8           | Amount of ammo remaining for firing independently.                                                        | 10           |
 | GunFlags             | U8           | Bit map                                                                                                   | 11           |
 | Selected Weapon Type | U8           | Currently selected Weapon Type                                                                            | 12           |
 | Reserved             | U8*3         | Reserved for future expansion                                                                             | 15           |
 
+**Buttons**
+- 0x01 = trigger
+- 0x02 = reload
+- 0x04 = walkie talkie
+- 0x08 = reset
+- 0x10 = power
+- 0x20 = recoil cnt
+
+**IrEvents**
+16 MSB
+- Bit 15-10: shot counter
+- Bit9-6: Weapon type of
+  - A = id of the shooter as set by the application (1..16) (default grenade == 50)
+  - W = Weapon ID the shot comes from (0-11 for the gun, 12-15 for the grenade)
+  - C = counter of shots fired (counts up from 0 and wraps)
+  - R = rounds in a plasma shot, according to the following formula: rounds = (RRR+1) * 4. e.g.: RRR=0 ->rounds=4 RRR=7->rounds=32
+  - G = grenade id (6 bit hash of 16 bit serial number)
+  - J = grenade random (4 bit random counter) for distinguishing grenade ids.
+  - S = grenade state (mostly acts as a countdown timer)
+  - 
+![alt text](image.png)
 
 ### Characteristic ”Control”
 GUID: **e6f59d13**-8230-4a5c-b22f-c062b1d329e3 
+
 Attributes: Read-Write
 
 ### Characteristic ”Config”
 GUID: **e6f59d14**-8230-4a5c-b22f-c062b1d329e3
+
 Attributes: Write
 
 ## Prototyping
@@ -116,6 +143,7 @@ service - start: 0x001a, end: 0xffff, type: primary, uuid: 0000180a-0000-1000-80
 Device DC:EC:C8:B6:84:CC
 
 ### RK45 2
+```
 Device EF:20:EC:C8:B7:2A (random)
         Name: SRG1_2F55D6ACFB33ECF8
         Alias: SRG1_2F55D6ACFB33ECF8
@@ -132,3 +160,4 @@ Device EF:20:EC:C8:B7:2A (random)
         UUID: Vendor specific           (e6f59d10-8230-4a5c-b22f-c062b1d329e3)
         AdvertisingFlags:
   06                                               .
+  ```
