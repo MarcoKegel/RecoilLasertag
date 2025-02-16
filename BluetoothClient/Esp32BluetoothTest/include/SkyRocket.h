@@ -3,24 +3,26 @@
 
 #include <Arduino.h>
 #include <BLEDevice.h>
+#include "BluetoothHelper.h"
 
-static BLEUUID advertisedServiceUUID("00009d10-0000-1000-8000-00805f9b34fb");
 
-class SkyRocket : public BLEAdvertisedDeviceCallbacks
+class SkyRocket 
 {
 public:
     SkyRocket();
-    void onResult(BLEAdvertisedDevice advertisedDevice) override;
+    
+    bool IsConnected();
     void Connect();
     void DisConnect();
-    BLEAdvertisedDevice *Device;
+
+    String GetManufacturer();
+
+    static const BLEUUID advertisedServiceUUID;
 
 private:
-    bool connectToServer();
-    boolean doConnect = false;
-    boolean connected = false;
-    boolean doScan = false;
-    
+      BLEDevice* myDevice;  
+      BLEAdvertisedDevice* myAdvertisedDevice;
+      BluetoothHelper* myBluetoothHelper;
 };
 
 #endif // SKYROCKET_H

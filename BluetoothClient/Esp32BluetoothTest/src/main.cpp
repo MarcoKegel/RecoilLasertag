@@ -2,30 +2,32 @@
 
 #include <Arduino.h>
 #include <BLEDevice.h>
-#include "DeviceInformationService.h"
 #include "SkyRocket.h"
-
-// #include "BLEScan.h"
-
-static SkyRocket *mySkyRocket;
-
-
+#include <iostream>
 
 void setup()
 {
   Serial.begin(115200);
   Serial.println("Starting Arduino BLE Client application…");
-  mySkyRocket = new SkyRocket();
+  SkyRocket skyRocket;
+  try
+  {
 
-  BLEDevice::init("");
-  BLEScan *pBLEScan = BLEDevice::getScan();
-  pBLEScan->setAdvertisedDeviceCallbacks(mySkyRocket);
-  pBLEScan->setInterval(1349);
-  pBLEScan->setWindow(449);
-  pBLEScan->setActiveScan(true);
-  pBLEScan->start(5, false);
+    do
+    {
+      skyRocket.Connect();
+      delay(5 * 1000);
+    } while (skyRocket.IsConnected() == false);
+    auto manu = skyRocket.GetManufacturer();
 
-  mySkyRocket->Connect();
+    Serial.println(manu.c_str());
+  }
+  catch (const std::exception &e)
+  {
+
+    std::cerr << e.what() << '\n';
+  }
+  skyRocket.DisConnect();
 }
 
 void loop()

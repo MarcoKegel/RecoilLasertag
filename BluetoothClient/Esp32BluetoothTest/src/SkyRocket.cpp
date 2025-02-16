@@ -1,60 +1,46 @@
 #include "SkyRocket.h"
+#include <stdexcept>
 
-
-
-
-
+#include "DeviceInformationService.h"
+const BLEUUID SkyRocket::advertisedServiceUUID("00009d10-0000-1000-8000-00805f9b34fb");
 
 SkyRocket::SkyRocket()
 {
-}
-void SkyRocket::onResult(BLEAdvertisedDevice advertisedDevice)
-{
-    Serial.print("BLE Advertised Device found: ");
-    Serial.println(advertisedDevice.toString().c_str());
-
-    if (advertisedDevice.haveServiceUUID() && advertisedDevice.isAdvertisingService(advertisedServiceUUID))
-    {
-        Serial.println("Found Rk45 Controller");
-        BLEDevice::getScan()->stop();
-        Device = new BLEAdvertisedDevice(advertisedDevice);
-        doConnect = true;
-        doScan = true;
-    }
+    myAdvertisedDevice = nullptr;
+    myBluetoothHelper = new BluetoothHelper(advertisedServiceUUID);
 }
 
 void SkyRocket::Connect()
 {
-    while(true)
-    {
-    if (doConnect == true)
-    {
-        if (connectToServer())
-        {
-            Serial.println("We are now connected to the BLE Server.");
-        }
-        else
-        {
-            Serial.println("We have failed to connect to the server; there is nothin more we will do.");
-        }
-        doConnect = false;
-    }
+    BLEDevice::init("ESP32_C3_SkyRocked");
+    BLEScan *pBLEScan = BLEDevice::getScan();
+    Serial.println("[BLE] start scan.");
+    pBLEScan->setAdvertisedDeviceCallbacks(myBluetoothHelper);
+    pBLEScan->setInterval(1349);
+    pBLEScan->setWindow(449);
+    pBLEScan->setActiveScan(true);
+    pBLEScan->start(5, false);
+}
 
-    if (connected)
+String SkyRocket::GetManufacturer()
+{
+    Serial.println("SkyRocket::GetManufacturer");
+    while (myBluetoothHelper->IsConnected ==false)
     {
-        Serial.println("Read Value:");
-        Serial.println(pRemoteCharacteristic->readValue().c_str());
+        Serial.println("Wait for Connection.");
+        delay(5000);
     }
-    else if (doScan)
-    {
-        BLEDevice::getScan()->start(0);
-    }
-    delay(1000);
-    }
+    auto message = DeviceInformationService(myBluetoothHelper->getService(DeviceInformationService::serviceUUID)).GetManufacturer();
+    
+    return message;
 }
 
 void SkyRocket::DisConnect()
 {
-    connected=false;
+    myBluetoothHelper->Disconnect();
 }
 
+bool SkyRocket::IsConnected()
+{
+    return myBluetoothHelper->IsConnected;
+}
