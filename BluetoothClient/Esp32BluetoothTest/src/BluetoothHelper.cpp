@@ -35,10 +35,10 @@ BLERemoteService *BluetoothHelper::getService(BLEUUID serviceId)
 
 void BluetoothHelper::Disconnect()
 {
-    Serial.print("BluetoothHelper Disconnect: ");
-    myDevice = nullptr;
+    Serial.println("BluetoothHelper Disconnect");
+    myClient->disconnect();
     myClient = nullptr;
-    IsConnected = false;
+    //IsConnected = false; //TODO refactor or rename. IsConnected is not correct
 }
 
 void BluetoothHelper::onResult(BLEAdvertisedDevice advertisedDevice)

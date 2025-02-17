@@ -16,6 +16,7 @@ public:
     void DisConnect();
 
     String GetManufacturer();
+    String GetDeviceName();
 
     static const BLEUUID advertisedServiceUUID;
 

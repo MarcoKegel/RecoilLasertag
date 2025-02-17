@@ -10,7 +10,9 @@ public:
     bool IsConnected;
 
     BluetoothHelper(BLEUUID advertisementId);
+
     
+
     BLERemoteService* getService(BLEUUID serviceId);
     void Disconnect();
     void onResult(BLEAdvertisedDevice advertisedDevice) override;

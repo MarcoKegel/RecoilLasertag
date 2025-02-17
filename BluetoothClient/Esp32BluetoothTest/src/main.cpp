@@ -18,9 +18,9 @@ void setup()
       skyRocket.Connect();
       delay(5 * 1000);
     } while (skyRocket.IsConnected() == false);
-    auto manu = skyRocket.GetManufacturer();
-
-    Serial.println(manu.c_str());
+    
+    Serial.println(skyRocket.GetManufacturer().c_str());
+    Serial.println(skyRocket.GetDeviceName().c_str());
   }
   catch (const std::exception &e)
   {

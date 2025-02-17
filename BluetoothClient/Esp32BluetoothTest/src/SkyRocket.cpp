@@ -2,6 +2,8 @@
 #include <stdexcept>
 
 #include "DeviceInformationService.h"
+#include "GenericAccessService.h"
+
 const BLEUUID SkyRocket::advertisedServiceUUID("00009d10-0000-1000-8000-00805f9b34fb");
 
 SkyRocket::SkyRocket()
@@ -31,13 +33,27 @@ String SkyRocket::GetManufacturer()
         delay(5000);
     }
     auto message = DeviceInformationService(myBluetoothHelper->getService(DeviceInformationService::serviceUUID)).GetManufacturer();
+    myBluetoothHelper->Disconnect();
+    return message;
+}
+
+String SkyRocket::GetDeviceName()
+{
+    Serial.println("SkyRocket::GetDeviceName");
+    while (myBluetoothHelper->IsConnected ==false)
+    {
+        Serial.println("Wait for Connection.");
+        delay(5000);
+    }
+    auto message = GenericAccessService(myBluetoothHelper->getService(GenericAccessService::serviceUUID)).GetDeviceInfo();
+    myBluetoothHelper->Disconnect();
     
     return message;
 }
 
 void SkyRocket::DisConnect()
 {
-    myBluetoothHelper->Disconnect();
+    //myBluetoothHelper->Disconnect(); // TODO Some Kind of Cleanup of AdvirticedService and so on.
 }
 
 bool SkyRocket::IsConnected()
