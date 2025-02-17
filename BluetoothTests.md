@@ -36,6 +36,12 @@ GUID: **e6f59d11**-8230-4a5c-b22f-c062b1d329e3
 
 Attributes: Read
 
+This ID characteristic contains 20 bytes. 
+The first 2 bytes are always 32 E0 which is the firmware version. 
+The next 8 bytes contain the device's serial number in somewhat reversed order. 
+The 11th byte will 01 for the SR-12 Rogue and 02 for the RK-45 Spitfire. 
+The rest of the bytes are 00 00 00 C7 A2 31 1E 00 20
+
 ### Characteristic ”Telemetry”
 GUID: **e6f59d12**-8230-4a5c-b22f-c062b1d329e3 
 

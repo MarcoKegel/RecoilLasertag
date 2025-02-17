@@ -3,6 +3,7 @@
 
 #include "DeviceInformationService.h"
 #include "GenericAccessService.h"
+#include "GunService.h"
 
 const BLEUUID SkyRocket::advertisedServiceUUID("00009d10-0000-1000-8000-00805f9b34fb");
 
@@ -27,7 +28,7 @@ void SkyRocket::Connect()
 String SkyRocket::GetManufacturer()
 {
     Serial.println("SkyRocket::GetManufacturer");
-    while (myBluetoothHelper->IsConnected ==false)
+    while (myBluetoothHelper->IsConnected == false)
     {
         Serial.println("Wait for Connection.");
         delay(5000);
@@ -40,20 +41,62 @@ String SkyRocket::GetManufacturer()
 String SkyRocket::GetDeviceName()
 {
     Serial.println("SkyRocket::GetDeviceName");
-    while (myBluetoothHelper->IsConnected ==false)
+    while (myBluetoothHelper->IsConnected == false)
     {
         Serial.println("Wait for Connection.");
         delay(5000);
     }
     auto message = GenericAccessService(myBluetoothHelper->getService(GenericAccessService::serviceUUID)).GetDeviceInfo();
     myBluetoothHelper->Disconnect();
-    
+
+    return message;
+}
+
+String SkyRocket::GetGunIdentity()
+{
+    Serial.println("SkyRocket::GetGunIdentity");
+    while (myBluetoothHelper->IsConnected == false)
+    {
+        Serial.println("Wait for Connection.");
+        delay(5000);
+    }
+    auto message = GunService(myBluetoothHelper->getService(GunService::serviceUUID)).GetIdentity();
+    myBluetoothHelper->Disconnect();
+
+    return message;
+}
+
+String SkyRocket::GetTelemetry()
+{
+    Serial.println("SkyRocket::GetTelemetry");
+    while (myBluetoothHelper->IsConnected == false)
+    {
+        Serial.println("Wait for Connection.");
+        delay(5000);
+    }
+    auto message = GunService(myBluetoothHelper->getService(GunService::serviceUUID)).GetTelemetry();
+    myBluetoothHelper->Disconnect();
+
+    return message;
+}
+
+String SkyRocket::GetControl()
+{
+    Serial.println("SkyRocket::GetControl");
+    while (myBluetoothHelper->IsConnected == false)
+    {
+        Serial.println("Wait for Connection.");
+        delay(5000);
+    }
+    auto message = GunService(myBluetoothHelper->getService(GunService::serviceUUID)).GetControl();
+    myBluetoothHelper->Disconnect();
+
     return message;
 }
 
 void SkyRocket::DisConnect()
 {
-    //myBluetoothHelper->Disconnect(); // TODO Some Kind of Cleanup of AdvirticedService and so on.
+    // myBluetoothHelper->Disconnect(); // TODO Some Kind of Cleanup of AdvirticedService and so on.
 }
 
 bool SkyRocket::IsConnected()

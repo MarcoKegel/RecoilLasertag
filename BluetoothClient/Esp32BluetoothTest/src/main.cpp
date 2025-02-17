@@ -21,6 +21,9 @@ void setup()
     
     Serial.println(skyRocket.GetManufacturer().c_str());
     Serial.println(skyRocket.GetDeviceName().c_str());
+    Serial.println(skyRocket.GetGunIdentity().c_str());
+    Serial.println(skyRocket.GetTelemetry().c_str());
+    Serial.println(skyRocket.GetControl().c_str());
   }
   catch (const std::exception &e)
   {

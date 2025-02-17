@@ -17,6 +17,9 @@ public:
 
     String GetManufacturer();
     String GetDeviceName();
+    String GetGunIdentity();
+    String GetTelemetry();
+    String GetControl();
 
     static const BLEUUID advertisedServiceUUID;
 
