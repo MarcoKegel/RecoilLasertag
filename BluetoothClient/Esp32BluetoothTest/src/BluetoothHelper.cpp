@@ -4,57 +4,115 @@
 
 BluetoothHelper::BluetoothHelper(BLEUUID advertisementId)
 {
-    Serial.print("BluetoothHelper ctor: ");
+    Log.traceln("BluetoothHelper ctor: ");
     myAdvertisementId = advertisementId;
-    IsConnected = false;
+
+    myClient = nullptr;
+    myDevice = nullptr;
+}
+
+BluetoothHelper::~BluetoothHelper()
+{
+    bool IsConnected = false;
+    if (myClient != nullptr)
+    {
+        myClient->disconnect();
+        delete myClient;
+        myClient = nullptr;
+    }
+    if (myDevice != nullptr)
+    {
+        delete myDevice;
+        myDevice = nullptr;
+    }
+}
+
+bool BluetoothHelper::IsConnected()
+{
+    Log.traceln("Device exists: %s", myDevice != nullptr ? "true" : "false");
+    Log.traceln("Client exists: %s", myClient != nullptr ? "true" : "false");
+    if (myClient != nullptr)
+    {
+        Log.traceln("Client connected: %s", myClient->isConnected() ? "true" : "false");
+    }
+    return (myDevice != nullptr);
 }
 
 BLERemoteService *BluetoothHelper::getService(BLEUUID serviceId)
 {
-    Serial.println("BluetoothHelper getService: ");
-    if (IsConnected == false)
+
+    Log.traceln("BluetoothHelper getService: %s", serviceId.toString().c_str());
+    if (myDevice == nullptr)
     {
-        throw std::runtime_error("Missing connection.");
+        Log.errorln("myDevice is nullptr!");
+        return nullptr;
+    }
+    Log.infoln("Use Device: %s\n", myDevice->getName().c_str());
+    if (myClient == nullptr || myClient->isConnected() == false)
+    {
+        Log.traceln("Creating client.");
+        myClient = BLEDevice::createClient();
+        if (myClient == nullptr)
+        {
+            Log.errorln("Failed to create BLE client!");
+            return nullptr;
+        }
+        myClient->connect(myDevice);
+        Log.traceln("Client connected.");
+        myClient->setMTU(517); // TODO why is this needed ?
     }
 
-    myClient = BLEDevice::createClient();
-    myClient->connect(myDevice);
-    myClient->setMTU(517); // TODO why is this needed ?
-    
+    while (myClient->isConnected() == false)
+    {
+        Log.infoln("Waiting for client to connect...");
+        delay(500);
+    }
+
+    auto services = myClient->getServices();
+    if (services == nullptr)
+    {
+        Log.errorln(" services is nullptr!");
+        return nullptr;
+    }
+    for (auto it = services->begin(); it != services->end(); ++it)
+    {
+        Log.traceln("Service UUID: %s", it->second->getUUID().toString().c_str());
+    }
+
     auto service = myClient->getService(serviceId);
+    Log.traceln("Service created: %s\n", serviceId.toString().c_str());
     if (service == nullptr)
     {
         auto message = "Failed to find our service UUID: " + serviceId.toString();
-
-        Serial.println(message.c_str());
-        myClient->disconnect();
-        throw std::runtime_error(message);
+        Log.errorln(message.c_str());
+        return nullptr;
     }
     return service;
 }
 
 void BluetoothHelper::Disconnect()
 {
-    Serial.println("BluetoothHelper Disconnect");
-    myClient->disconnect();
-    myClient = nullptr;
-    //IsConnected = false; //TODO refactor or rename. IsConnected is not correct
+    Log.traceln("BluetoothHelper Disconnect");
+    if (myClient != nullptr)
+    {
+        myClient->disconnect();
+    }
+    // IsConnected = false; //TODO refactor or rename. IsConnected is not correct
 }
 
 void BluetoothHelper::onResult(BLEAdvertisedDevice advertisedDevice)
 {
-    Serial.print("BLE Advertised Device found: ");
-    Serial.println(advertisedDevice.toString().c_str());
+    Log.info("BLE Advertised Device found: ");
+    Log.infoln(advertisedDevice.toString().c_str());
 
-    if (advertisedDevice.haveServiceUUID() && advertisedDevice.isAdvertisingService(myAdvertisementId))
+    if (advertisedDevice.haveServiceUUID() &&
+        advertisedDevice.isAdvertisingService(myAdvertisementId))
     {
-        Serial.println("Found Recoil Controller");
-        
-        BLEDevice::getScan()->stop();
-        
-        Serial.println("Create advertisedDevice");
-        myDevice = new BLEAdvertisedDevice(advertisedDevice);
+        Log.infoln("Found Recoil Controller");
 
-        IsConnected = true;
+        BLEDevice::getScan()->stop();
+
+        Log.traceln("Create advertisedDevice");
+        myDevice = new BLEAdvertisedDevice(advertisedDevice);
     }
 }

@@ -2,7 +2,10 @@
 #define GUN_SERVICE_H
 
 #include <Arduino.h>
+#include <ArduinoLog.h>
 #include <BLEDevice.h>
+
+#include "BluetoothLogHelper.h"
 
 
 
@@ -17,11 +20,11 @@ public:
 
     String GetControl();
 
-    static const BLEUUID serviceUUID;
-    static const BLEUUID identityCharUUID;
-    static const BLEUUID telemetryCharUUID;
-    static const BLEUUID controlCharUUID;
-    static const BLEUUID configCharUUID;
+    static  BLEUUID serviceUUID;
+    static  BLEUUID identityCharUUID;
+    static  BLEUUID telemetryCharUUID;
+    static  BLEUUID controlCharUUID;
+    static  BLEUUID configCharUUID;
 
 private:
     BLERemoteService* myService;   

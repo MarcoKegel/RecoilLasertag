@@ -2,6 +2,7 @@
 #define SKYROCKET_H
 
 #include <Arduino.h>
+#include <ArduinoLog.h>
 #include <BLEDevice.h>
 #include "BluetoothHelper.h"
 
@@ -10,7 +11,8 @@ class SkyRocket
 {
 public:
     SkyRocket();
-    
+    ~SkyRocket();
+
     bool IsConnected();
     void Connect();
     void DisConnect();
@@ -24,9 +26,11 @@ public:
     static const BLEUUID advertisedServiceUUID;
 
 private:
-      BLEDevice* myDevice;  
-      BLEAdvertisedDevice* myAdvertisedDevice;
-      BluetoothHelper* myBluetoothHelper;
+    bool WaitForConnection(unsigned long timeoutMs);
+
+    BLEDevice* myDevice;  
+    BLEAdvertisedDevice* myAdvertisedDevice;
+    BluetoothHelper* myBluetoothHelper;
 };
 
 #endif // SKYROCKET_H

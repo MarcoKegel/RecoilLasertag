@@ -2,6 +2,7 @@
 #define GENERIC_ACCESS_SERVICE_H
 
 #include <Arduino.h>
+#include <ArduinoLog.h>
 #include <BLEDevice.h>
 
 
@@ -14,8 +15,8 @@ public:
     String GetDeviceInfo();
     void SetDeviceInfo(String value);
 
-    static const BLEUUID serviceUUID;
-    static const BLEUUID charUUID;
+    static BLEUUID serviceUUID;
+    static BLEUUID charUUID;
 
 private:
     BLERemoteService* myService;   

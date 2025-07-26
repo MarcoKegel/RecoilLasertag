@@ -2,6 +2,7 @@
 #define DEVICE_INFORMATION_SERVICE_H
 
 #include <Arduino.h>
+#include <ArduinoLog.h>
 #include <BLEDevice.h>
 
 
@@ -13,8 +14,8 @@ public:
     
     String GetManufacturer();
 
-    static const BLEUUID serviceUUID;
-    static const BLEUUID charUUID;
+    static BLEUUID serviceUUID;
+    static BLEUUID charUUID;
 
 private:
     BLERemoteService* myService;   

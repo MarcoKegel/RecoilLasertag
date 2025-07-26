@@ -13,93 +13,137 @@ SkyRocket::SkyRocket()
     myBluetoothHelper = new BluetoothHelper(advertisedServiceUUID);
 }
 
+SkyRocket::~SkyRocket()
+{
+    myBluetoothHelper->Disconnect();
+    delete myBluetoothHelper;
+    myBluetoothHelper = nullptr;
+}
+
 void SkyRocket::Connect()
 {
-    BLEDevice::init("ESP32_C3_SkyRocked");
+    BLEDevice::init("ESP32_C3_SkyRocket"); // Fixed typo
     BLEScan *pBLEScan = BLEDevice::getScan();
-    Serial.println("[BLE] start scan.");
+   Log.infoln("[BLE] start scan.");
     pBLEScan->setAdvertisedDeviceCallbacks(myBluetoothHelper);
     pBLEScan->setInterval(1349);
     pBLEScan->setWindow(449);
     pBLEScan->setActiveScan(true);
     pBLEScan->start(5, false);
+    WaitForConnection(10000);
+    pBLEScan->stop();
+}
+
+bool SkyRocket::WaitForConnection(unsigned long timeoutMs)
+{
+    unsigned long start = millis();
+    while (!myBluetoothHelper->IsConnected())
+    {
+        if (millis() - start > timeoutMs)
+        {
+            Log.warningln("Connection timeout.");
+            return false;
+        }
+        Log.infoln("Wait for Connection.");
+        delay(500);
+    }
+    return true;
 }
 
 String SkyRocket::GetManufacturer()
 {
-    Serial.println("SkyRocket::GetManufacturer");
-    while (myBluetoothHelper->IsConnected == false)
-    {
-        Serial.println("Wait for Connection.");
-        delay(5000);
+    Log.traceln("SkyRocket::GetManufacturer");
+    if (!WaitForConnection(10000))
+    { // 10s timeout
+        return "Connection failed";
     }
-    auto message = DeviceInformationService(myBluetoothHelper->getService(DeviceInformationService::serviceUUID)).GetManufacturer();
-    myBluetoothHelper->Disconnect();
+    auto service = myBluetoothHelper->getService(DeviceInformationService::serviceUUID);
+    if (service == nullptr)
+    {
+       Log.errorln("DeviceInformationService service is nullptr!");
+        return "";
+    }
+    auto message = DeviceInformationService(service).GetManufacturer();
     return message;
 }
 
 String SkyRocket::GetDeviceName()
 {
-    Serial.println("SkyRocket::GetDeviceName");
-    while (myBluetoothHelper->IsConnected == false)
-    {
-        Serial.println("Wait for Connection.");
-        delay(5000);
+    Log.traceln("SkyRocket::GetDeviceName");
+    if (!WaitForConnection(10000))
+    { // 10s timeout
+        return "Connection failed";
     }
-    auto message = GenericAccessService(myBluetoothHelper->getService(GenericAccessService::serviceUUID)).GetDeviceInfo();
-    myBluetoothHelper->Disconnect();
-
+    auto service = myBluetoothHelper->getService(GenericAccessService::serviceUUID);
+    if (service == nullptr)
+    {
+        Log.errorln("GenericAccessService service is nullptr!");
+        return "";
+    }
+    auto message = GenericAccessService(service).GetDeviceInfo();
     return message;
 }
 
 String SkyRocket::GetGunIdentity()
 {
-    Serial.println("SkyRocket::GetGunIdentity");
-    while (myBluetoothHelper->IsConnected == false)
-    {
-        Serial.println("Wait for Connection.");
-        delay(5000);
+     Log.traceln("SkyRocket::GetGunIdentity");
+    if (!WaitForConnection(10000))
+    { // 10s timeout
+        return "Connection failed";
     }
-    auto message = GunService(myBluetoothHelper->getService(GunService::serviceUUID)).GetIdentity();
-    myBluetoothHelper->Disconnect();
-
+    auto service = myBluetoothHelper->getService(GunService::serviceUUID);
+    if (service == nullptr)
+    {
+       Log.errorln("GunService service is nullptr!");
+        return "";
+    }
+    auto message = GunService(service).GetIdentity();
     return message;
 }
 
 String SkyRocket::GetTelemetry()
 {
-    Serial.println("SkyRocket::GetTelemetry");
-    while (myBluetoothHelper->IsConnected == false)
-    {
-        Serial.println("Wait for Connection.");
-        delay(5000);
+     Log.traceln("SkyRocket::GetTelemetry");
+    if (!WaitForConnection(10000))
+    { // 10s timeout
+        return "Connection failed";
     }
-    auto message = GunService(myBluetoothHelper->getService(GunService::serviceUUID)).GetTelemetry();
-    myBluetoothHelper->Disconnect();
-
+    auto service = myBluetoothHelper->getService(GunService::serviceUUID);
+    if (service == nullptr)
+    {
+        Log.errorln("GunService service is nullptr!");
+        return "";
+    }
+    auto message = GunService(service).GetTelemetry();
     return message;
 }
 
 String SkyRocket::GetControl()
 {
-    Serial.println("SkyRocket::GetControl");
-    while (myBluetoothHelper->IsConnected == false)
-    {
-        Serial.println("Wait for Connection.");
-        delay(5000);
+     Log.traceln("SkyRocket::GetControl");
+    if (!WaitForConnection(10000))
+    { // 10s timeout
+        return "Connection failed";
     }
-    auto message = GunService(myBluetoothHelper->getService(GunService::serviceUUID)).GetControl();
-    myBluetoothHelper->Disconnect();
-
+    auto service = myBluetoothHelper->getService(GunService::serviceUUID);
+    if (service == nullptr)
+    {
+        Log.errorln("GunService service is nullptr!");
+        return "";
+    }
+    auto message = GunService(service).GetControl();
     return message;
 }
 
 void SkyRocket::DisConnect()
 {
-    // myBluetoothHelper->Disconnect(); // TODO Some Kind of Cleanup of AdvirticedService and so on.
+    if (myBluetoothHelper != nullptr)
+    {
+        myBluetoothHelper->Disconnect(); // TODO Some Kind of Cleanup of AdvirticedService and so on.
+    }
 }
 
 bool SkyRocket::IsConnected()
 {
-    return myBluetoothHelper->IsConnected;
+    return myBluetoothHelper->IsConnected();
 }
