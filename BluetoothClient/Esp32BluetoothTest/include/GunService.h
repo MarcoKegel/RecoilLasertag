@@ -7,6 +7,14 @@
 
 #include "BluetoothLogHelper.h"
 
+struct GunIdentity {
+    uint16_t version;        // Version (U16)
+    uint8_t uuid[8];         // UUID (U8*8)
+    uint8_t gunModel;        // GunModel (U8)
+    uint8_t padding[3];      // Padding (U8*3)
+    uint32_t configCRC;      // ConfigCRC (U32)
+    uint16_t blVersion;      // Bootloader Version (U16)
+};
 
 
 class GunService
@@ -27,6 +35,7 @@ public:
     static  BLEUUID configCharUUID;
 
 private:
+    GunIdentity parseFirmwareData(const std::string&);
     BLERemoteService* myService;   
 };
 
