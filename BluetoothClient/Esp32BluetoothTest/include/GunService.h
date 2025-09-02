@@ -15,7 +15,15 @@ struct GunIdentity {
     uint32_t configCRC;      // ConfigCRC (U32)
     uint16_t blVersion;      // Bootloader Version (U16)
 };
-
+struct GunControl {
+    uint8_t PktCounter : 4;      // U4
+    uint8_t CmdCounter : 4;      // U4
+    uint8_t IR_ack;          // U8
+    uint16_t Action;          // U16
+    uint8_t GunID;            // U8
+    uint8_t WeaponType;       // U8
+    uint8_t WeaponAmmo;       // U8
+};
 
 class GunService
 {
@@ -36,6 +44,7 @@ public:
 
 private:
     GunIdentity parseFirmwareData(const std::string&);
+    GunControl parseControlData(const std::string&);
     BLERemoteService* myService;   
 };
 
