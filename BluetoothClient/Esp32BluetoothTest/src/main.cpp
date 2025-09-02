@@ -24,17 +24,18 @@ void setup()
   
   // Serial.printf("DeviceName: %s",skyRocket.GetDeviceName().c_str()); // This return nothing, double check with some other app
   // Serial.println();
-  Serial.printf("Identity: %s",skyRocket.GetGunIdentity().c_str()); 
-  Serial.println();
+  // Serial.printf("Identity: %s",skyRocket.GetGunIdentity().c_str());  // works but need to refactored to return objects instead complicated string
+  // Serial.println();
   
 
   //Serial.printf("Telemetry: %s",skyRocket.GetTelemetry().c_str()); // anonymos function which writes to LOG is implemented. Need to be replaced with a class/function. Check how a override with null may work (derregister).
+  // need to be refactored to provide an api to get an object with properties/structs 
   //Serial.println();
   //delay(5 * 1000); // to get some logs from the notifier
 
 
-  // Serial.printf("Control: %s",skyRocket.GetControl().c_str()); // is not tested yet, but should work.
-  // Serial.println();
+  Serial.printf("Control: %s",skyRocket.GetControl().c_str()); // is not tested yet, but should work.
+  Serial.println();
   
   skyRocket.DisConnect();
 }
