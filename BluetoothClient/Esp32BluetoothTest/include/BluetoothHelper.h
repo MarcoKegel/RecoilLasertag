@@ -14,6 +14,7 @@ public:
     
 
     BLERemoteService* getService(BLEUUID serviceId);
+    BLERemoteCharacteristic* getCharacteristic(BLEUUID serviceId, BLEUUID characteristicId);
     void Disconnect();
     void onResult(BLEAdvertisedDevice advertisedDevice) override;
     bool IsConnected();

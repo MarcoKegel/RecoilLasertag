@@ -89,7 +89,23 @@ BLERemoteService *BluetoothHelper::getService(BLEUUID serviceId)
     }
     return service;
 }
-
+BLERemoteCharacteristic* BluetoothHelper::getCharacteristic(BLEUUID serviceId, BLEUUID characteristicId)
+{
+    auto service = getService(serviceId);
+    if (service == nullptr)
+    {
+        Log.errorln("Service is nullptr!");
+        return nullptr;
+    }
+    auto characteristic = service->getCharacteristic(characteristicId);
+    if (characteristic == nullptr)
+    {
+        auto message = "Failed to find our characteristic UUID: " + characteristicId.toString();
+        Log.errorln(message.c_str());
+        return nullptr;
+    }
+    return characteristic;
+}
 void BluetoothHelper::Disconnect()
 {
     Log.traceln("BluetoothHelper Disconnect");
