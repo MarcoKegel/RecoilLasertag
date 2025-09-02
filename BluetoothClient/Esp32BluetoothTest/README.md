@@ -1,4 +1,24 @@
 
+## Logger
+
+* %s	display as string (char*)
+* %S    display as string from flash memory (__FlashStringHelper* or char[] PROGMEM)
+* %c	display as single character
+* %C    display as single character or as hexadecimal value (prefixed by `0x`) if not a printable character
+* %d	display as integer value
+* %l	display as long value
+* %u	display as unsigned long value
+* %x	display as hexadecimal value
+* %X	display as hexadecimal value prefixed by `0x` and leading zeros
+* %b	display as binary number
+* %B	display as binary number, prefixed by `0b`
+* %t	display as boolean value "t" or "f"
+* %T	display as boolean value "true" or "false"
+* %D,%F display as double value
+* %p    display a  printable object 
+
+
+
 **Bluetooth**
 ```plantuml
 
