@@ -10,7 +10,10 @@ class StringConverter
 {
 public:
     static std::string stringToHex(const std::string &input);
+    static std::string stringToHex(const char &c);
+    
     static std::string stringToBinary(const std::string &input);
+    static std::string stringToBinary(const char &c);
 };
 
 #endif // STRING_CONVERTER_H
