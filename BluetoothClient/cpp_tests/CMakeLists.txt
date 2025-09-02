@@ -8,10 +8,14 @@ include_directories(${CMAKE_SOURCE_DIR}/tests)
 enable_testing()
 
 add_executable(CalculatorTests tests/CalculatorTests.cpp)
+add_executable(BufferHelperTests tests/BufferHelperTests.cpp)
 
 find_package(Catch2 3 REQUIRED)
 target_link_libraries(CalculatorTests PRIVATE Catch2::Catch2WithMain)
+target_link_libraries(BufferHelperTests PRIVATE Catch2::Catch2WithMain)
 
 include(CTest)
 include(Catch)
+
 catch_discover_tests(CalculatorTests)
+catch_discover_tests(BufferHelperTests)
