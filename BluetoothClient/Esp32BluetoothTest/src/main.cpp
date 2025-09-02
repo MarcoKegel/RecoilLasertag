@@ -64,7 +64,14 @@ void Try02()
 
   pBLEScan->stop();
 
-  auto telemetryCharacteristic = bluetoothHelper->getCharacteristic(GunService::serviceUUID, GunService::telemetryCharUUID);
+  auto service = bluetoothHelper->getService(GunService::serviceUUID);
+  if (service == nullptr)
+  {
+    Log.errorln("gun service is nullptr!");
+    return;
+  }
+
+  auto telemetryCharacteristic = service->getCharacteristic(GunService::telemetryCharUUID);
   if (telemetryCharacteristic == nullptr)
   {
     Log.errorln("telemetryCharacteristic is nullptr!");
@@ -75,8 +82,32 @@ void Try02()
                                              {
     std::string strValue = std::string((char *)pData, length);
     Log.infoln("Telemetry Notify callback for characteristic %s of data length %d", pBLERemoteCharacteristic->getUUID().toString().c_str(), length);
-    Log.infoln("%s", StringConverter::stringToBinary(strValue).c_str()); 
-    });
+    Log.infoln("%s", StringConverter::stringToBinary(strValue).c_str()); });
+
+  auto controlCharacteristic = service->getCharacteristic(GunService::controlCharUUID);
+  if (controlCharacteristic == nullptr)
+  {
+    Log.errorln("controlCharacteristic is nullptr!");
+    return;
+  }
+
+  uint8_t init[20] = {0x0, 0x0, 0x0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+  controlCharacteristic->writeValue(init, 20, false); // init
+  Log.infoln("Init sent");
+
+  uint8_t shoot[20] = {0x00, 0x00, 0x01, 0x00, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0};
+  controlCharacteristic->writeValue(shoot, 20, false); // shoot
+  Log.infoln("Shoot sent");
+
+    uint8_t poweroff[20] = {0x0, 0x0, 0x20, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0};
+  controlCharacteristic->writeValue(poweroff, 20, false); // shoot
+  Log.infoln("Poweroff sent");
+
+  // The write values have no effect - why
+
+  delay(5 * 1000); // to get some logs from the notifier
+  bluetoothHelper->Disconnect();
+  Log.infoln("DONE");
 }
 
 void setup()
